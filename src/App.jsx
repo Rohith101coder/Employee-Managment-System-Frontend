@@ -20,6 +20,7 @@ function App() {
           <Route path="/employees" element={<ListEmployeeComponent />}></Route>
           <Route path='/namaste' element={<Hello/>}></Route>
           <Route path='/add-employee' element={<EmployeeComponent/>}/>
+          <Route path='edit-employee/:id' element={<EmployeeComponent/>}/>
         </Routes>
 
         <FooterComponent />

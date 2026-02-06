@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { createEmployee } from '../services/EmployeeService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EmployeeComponent = () => {
 
@@ -8,6 +8,7 @@ const EmployeeComponent = () => {
     const[lastName,setLastName]=useState('');
     const[email,setEmail]=useState('');
 
+    const{id} = useParams();
     const[errors,setErrors]=useState({
         firstName:'',
         lastName:'',
@@ -65,6 +66,13 @@ const EmployeeComponent = () => {
         return valid;
     }
 
+    function pageTitle(){
+      if(id){
+        return <h2 className="text-center">update Employee</h2>;
+      }else{
+        <h2 className="text-center">Add Employee</h2>;
+      }
+    }
 
   return (
     <div className="container">
@@ -77,9 +85,9 @@ const EmployeeComponent = () => {
           <div className="card-body">
             <form action="">
               <div className="form-group mb-2">
-                <label htmlFor="" className="form-label">
-                  Employee First Name:
-                </label>
+               {
+                pageTitle()
+               }
                 <input
                   type="text"
                   placeholder="enter employee first name "
