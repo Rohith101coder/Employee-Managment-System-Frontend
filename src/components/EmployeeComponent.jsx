@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { createEmployee } from '../services/EmployeeService';
+import React, { useEffect, useState } from 'react'
+import { createEmployee, getEmployee, updateEmployee } from '../services/EmployeeService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const EmployeeComponent = () => {
@@ -16,6 +16,18 @@ const EmployeeComponent = () => {
     })
     const navigator=useNavigate('');
 
+    useEffect(()=>{
+        if(id){
+          getEmployee(id).then((response)=>{
+            setFirstName(response.data.firstName);
+            setLastName(response.data.lastName);
+            setEmail(response.data.email);
+          }).catch(error=>{
+            console.error(error);
+          })
+        }
+    },[id])
+
     // function handleFirstName(e){
     //     setFirstName(e.target.value);
     // }
@@ -26,11 +38,20 @@ const EmployeeComponent = () => {
     //     setEmail(e.target.value);
     // }
 
-    function saveEmployee(e){
+    function saveOrUpdateEmployee(e){
         e.preventDefault();
         if(validateForm()){
              const employee={firstName,lastName,email}
         console.log(employee)
+
+        if(id){
+          updateEmployee(id,employee).then((response)=>{
+            console.log(response.data);
+            navigator('/employees');
+          }).catch(error=>{
+            console.error(error);
+          })
+        }
 
         createEmployee(employee).then((response)=>{
             console.log(response.data);
@@ -70,7 +91,7 @@ const EmployeeComponent = () => {
       if(id){
         return <h2 className="text-center">update Employee</h2>;
       }else{
-        <h2 className="text-center">Add Employee</h2>;
+       return <h2 className="text-center">Add Employee</h2>;
       }
     }
 
@@ -81,13 +102,17 @@ const EmployeeComponent = () => {
       <br />
       <div className="row">
         <div className="card col-md-6 offset-md-3 offset-md-3">
-          <h2 className="text-center">Add Employee</h2>
+         {
+          pageTitle()
+         }
           <div className="card-body">
             <form action="">
               <div className="form-group mb-2">
-               {
-                pageTitle()
-               }
+                {
+                  <label htmlFor="" className="form-label">
+                    Employee First Name:
+                  </label>
+                }
                 <input
                   type="text"
                   placeholder="enter employee first name "
@@ -136,7 +161,7 @@ const EmployeeComponent = () => {
                 )}
               </div>
 
-              <button className="btn btn-success" onClick={saveEmployee}>
+              <button className="btn btn-success" onClick={saveOrUpdateEmployee}>
                 submit
               </button>
             </form>
